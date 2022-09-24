@@ -1,4 +1,5 @@
 import { Component, Host, h, State } from '@stencil/core';
+import { SomeIonicStuff } from '../SomeIonicStuff';
 
 const lazyStencilLib = 'https://cdn.jsdelivr.net/npm/@ionic/core/loader/index.es2017.js';
 
@@ -25,6 +26,7 @@ export class AppProfile {
       console.log(`Got the module`, myModule);
 
       const { applyPolyfills, defineCustomElements } = myModule;
+      console.log(`Applying polyfills and regiserting custom elements`, myModule);
 
       // Registers the custom elements in the browser
       applyPolyfills().then(() => {
@@ -48,12 +50,7 @@ export class AppProfile {
         <button onClick={this.onButtonClicked}>Load ionic lazily from CDN</button>
         {this.externalLoaded && (
           <div>
-            <ion-button>I'm an ionic button</ion-button>
-            <ion-list>
-              <ion-item>
-                <ion-label>I'm an ion list</ion-label>
-              </ion-item>
-            </ion-list>
+            <SomeIonicStuff />
           </div>
         )}
       </Host>
