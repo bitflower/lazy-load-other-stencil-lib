@@ -1,5 +1,6 @@
-import { Component, Prop, h } from '@stencil/core';
-import { MatchResults } from '@stencil-community/router';
+import { Component, Host, h, State } from '@stencil/core';
+
+const lazyStencilLib = 'https://cdn.jsdelivr.net/npm/@ionic/core/loader/index.es2017.js';
 
 @Component({
   tag: 'app-profile',
@@ -7,22 +8,55 @@ import { MatchResults } from '@stencil-community/router';
   shadow: true,
 })
 export class AppProfile {
-  @Prop() match: MatchResults;
+  @State()
+  private externalLoaded = false;
 
-  normalize(name: string): string {
-    if (name) {
-      return name.substr(0, 1).toUpperCase() + name.substr(1).toLowerCase();
+  // --------------------------------------------------------------------------
+  //
+  //  Private Properties
+  //
+  // --------------------------------------------------------------------------
+
+  private onButtonClicked = async () => {
+    console.log(`Starting lazy load ....`);
+    /* Dynamic Import */
+    try {
+      const myModule = await import(lazyStencilLib);
+      console.log(`Got the module`, myModule);
+
+      const { applyPolyfills, defineCustomElements } = myModule;
+
+      // Registers the custom elements in the browser
+      applyPolyfills().then(() => {
+        defineCustomElements();
+        this.externalLoaded = true;
+      });
+    } catch (error) {
+      console.error(error);
     }
-    return '';
-  }
+  };
+
+  // --------------------------------------------------------------------------
+  //
+  //  Render
+  //
+  // --------------------------------------------------------------------------
 
   render() {
-    if (this.match && this.match.params.name) {
-      return (
-        <div class="app-profile">
-          <p>Hello! My name is {this.normalize(this.match.params.name)}. My name was passed in through a route param!</p>
-        </div>
-      );
-    }
+    return (
+      <Host>
+        <button onClick={this.onButtonClicked}>Load ionic lazily from CDN</button>
+        {this.externalLoaded && (
+          <div>
+            <ion-button>I'm an ionic button</ion-button>
+            <ion-list>
+              <ion-item>
+                <ion-label>I'm an ion list</ion-label>
+              </ion-item>
+            </ion-list>
+          </div>
+        )}
+      </Host>
+    );
   }
 }
