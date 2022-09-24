@@ -4,6 +4,10 @@ Proof of concept :white_check_mark:
 
 I think we should be sensitive to the fact that this uses ES module (if that is what index.es2017.js provides).
 
+## Live demo
+
+[Here](https://lazy-load-other-stencil-lib-de9j.vercel.app/profile/stencil).
+
 ## Getting Started
 
 To run the project, clone this repo to a new directory:
